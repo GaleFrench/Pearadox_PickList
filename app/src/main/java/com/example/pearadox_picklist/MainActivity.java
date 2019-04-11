@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "******* Starting Pearadox-5414 Pick-List  *******");
         ImageView imageView_Pearadox = (ImageView) findViewById(R.id.imageView_Pearadox);
         lstView_Teams = (ListView) findViewById(R.id.lstView_Teams);
-        FRC_ChampDiv = "TXCHA";
+//        FRC_ChampDiv = "TXCHA";   // DEBUG
 
 
         txt_Teams = (TextView) findViewById(R.id.txt_Teams);
@@ -101,7 +101,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+    /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
+    /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
     /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
     private void loadFile() {
         SimpleAdapter adaptTeams = new SimpleAdapter(
@@ -174,21 +175,21 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-        // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-        public void buttonPicked_Click (View view){
-            Log.i(TAG, ">>>>> buttonPicked_Click  " + teamSelected);
-            if (teamSelected >= 0) {
-                lstView_Teams.getChildAt(teamSelected).setBackgroundColor(Color.DKGRAY);
-            }
+    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    public void buttonPicked_Click (View view){
+        Log.i(TAG, ">>>>> buttonPicked_Click  " + teamSelected);
+        if (teamSelected >= 0) {
+            lstView_Teams.getChildAt(teamSelected).setBackgroundColor(Color.DKGRAY);
         }
+    }
 
-        // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-        public void buttonCookie_Click (View view){
-            Log.i(TAG, ">>>>> buttonCookie_Click  " + teamSelected);
-            if (teamSelected >= 0) {
-                lstView_Teams.getChildAt(teamSelected).setBackgroundColor(Color.RED);
-            }
+    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    public void buttonCookie_Click (View view){
+        Log.i(TAG, ">>>>> buttonCookie_Click  " + teamSelected);
+        if (teamSelected >= 0) {
+            lstView_Teams.getChildAt(teamSelected).setBackgroundColor(Color.RED);
         }
+    }
 
 
 //###################################################################
