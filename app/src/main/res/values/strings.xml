@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">Pearadox_PickList</string>
+    <string name="event_prompt">Event?</string>
+
+
+
+    <!-- ##### Events ##### -->
+    <string-array name="event_array">
+        <item> </item>
+        <item>TEST</item>
+        <item>TXCHA</item>
+        <item>TXGRE</item>
+        <item>FTCMP</item>
+        <!--<item>FIRST Championship (Houston)</item>-->
+    </string-array>
+
+
+
+    <!-- -->
+    <!-- @@@@@ COLORS @@@@@ -->
+    <color name="red">#ff0000</color>
+    <color name="darkred">#8b0000</color>
+    <color name="orange">#FF8300</color>
+    <color name="maroon">#800000</color>
+    <color name="purple">#800080</color>
+    <color name="yellow">#ffff00</color>
+    <color name="green">#00ff00</color>
+    <color name="darkgreen">#006400</color>
+    <color name="limegreen">#32cd32</color>
+    <color name="blue">#0000ff</color>
+    <color name="brightblue">#4169e1</color>
+    <color name="navy">#000080</color>
+    <color name="midnight">#003366</color>
+    <color name="cyan">#00eeee</color>
+    <color name="magenta">#ee00ee</color>
+    <color name="pink">#ffc0cb</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="grey">#a8a8a8</color>
+
+
+</resources>
