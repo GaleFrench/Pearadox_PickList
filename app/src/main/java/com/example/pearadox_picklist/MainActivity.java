@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
                 HashMap<String, String> top = draftList.get(teamSelected);
                 HashMap<String, String> bot = draftList.get(teamSelected-1);
                 draftList.set(teamSelected, bot);       // Swap the
-                draftList.set(teamSelected-1, top);     //   order of team
+                draftList.set(teamSelected-1, top);     //   order of teams
                 adaptTeams.notifyDataSetChanged();
             }
         }
