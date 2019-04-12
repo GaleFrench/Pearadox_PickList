@@ -4,6 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
+    android:background="@drawable/list_item_selector">
     android:paddingBottom="5dip"
     android:paddingLeft="5dip"
     android:paddingTop="5dip" >

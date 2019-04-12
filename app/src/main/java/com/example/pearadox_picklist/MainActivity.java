@@ -2,6 +2,8 @@ package com.example.pearadox_picklist;
 
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,10 +35,11 @@ public class MainActivity extends AppCompatActivity {
     public int teamSelected = -1;
     ImageView imageView_Pearadox;
     ListView lstView_Teams;
-    Button btn_Match, btn_Picked;
+    Button btn_UP, btn_DOWN;
     Spinner spinner_Event;
+    SimpleAdapter adaptTeams;
     ArrayAdapter<String> adapter_Event;
-    String EventName = "";
+    String tnum = "";
     String FRC_ChampDiv = "";
     TextView TeamData, BA, Stats, Stats2;
     static final ArrayList<HashMap<String, String>> draftList = new ArrayList<HashMap<String, String>>();
@@ -64,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         spinner_Event.setAdapter(adapter_Event);
         spinner_Event.setSelection(0, false);
         spinner_Event.setOnItemSelectedListener(new event_OnItemSelectedListener());
+        lstView_Teams.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
         // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         lstView_Teams.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -73,7 +77,9 @@ public class MainActivity extends AppCompatActivity {
                 teamSelected = pos;
                 lstView_Teams.setSelector(android.R.color.holo_blue_light);
                 /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
-//                tnum = draftList.get(teamSelected).substring(0,4);
+//                Toast toast = Toast.makeText(getBaseContext(), "POS= " + teamSelected, Toast.LENGTH_LONG);
+//                toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+//                toast.show();
             }
 
             public void onNothingSelected(AdapterView<?> parent) {
@@ -88,9 +94,8 @@ public class MainActivity extends AppCompatActivity {
         public void onItemSelected(AdapterView<?> parent,
                                    View view, int pos, long id) {
             String ev = parent.getItemAtPosition(pos).toString();
-            EventName = ev;
+            FRC_ChampDiv = ev;
             Log.w(TAG, ">>>>> Event '" + ev + "'  \n ");
-            FRC_ChampDiv = EventName;
 //           draftList.clear();
             loadFile();
 
@@ -105,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
     /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
     /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
     private void loadFile() {
-        SimpleAdapter adaptTeams = new SimpleAdapter(
+        adaptTeams = new SimpleAdapter(
                 this,
                 draftList,
                 R.layout.draft_list_layout,
@@ -121,33 +126,33 @@ public class MainActivity extends AppCompatActivity {
             File picks = new File(Environment.getExternalStorageDirectory() + "/download/FRC5414/" + file);
             BufferedReader bufferedReader = null;
             bufferedReader = new BufferedReader(new FileReader(picks));
-            String inputLine;
-            String teamStuff = ""; String rankStuff = ""; String statStuff = ""; String stat2Stuff = "";
-            while ((inputLine = bufferedReader.readLine()) != null) {
-                System.out.println(inputLine);
-                if (inputLine.length() > 1) {
-//                    Log.w(TAG, "'" + inputLine + "' " + inputLine.length());
-                    int x = inputLine.indexOf("team=");
-                    teamStuff = inputLine.substring(x+5, inputLine.indexOf("}"));
-                    x = inputLine.indexOf(", Stats2=");
-                    rankStuff = inputLine.substring(4, x);
-                    x = inputLine.indexOf("Stats=");
-                    int y = inputLine.indexOf("team=") -2;
-                    statStuff = inputLine.substring(x+6, y);
-                    x = inputLine.indexOf("Stats2=");
-                    y = inputLine.indexOf("Stats=") -2;
-                    stat2Stuff = inputLine.substring(x+7, y);
-                    HashMap<String, String> temp = new HashMap<String, String>();
-                    temp.put("team", teamStuff);
-                    temp.put("BA", rankStuff);
-                    temp.put("Stats", statStuff);
-                    temp.put("Stats2", stat2Stuff);
-                    draftList.add(temp);
-                    numTeams++;
-                } else {
-                    Log.w(TAG, "'" + inputLine + "' " + inputLine.length());
+                String inputLine;
+                String teamStuff = ""; String rankStuff = ""; String statStuff = ""; String stat2Stuff = "";
+                while ((inputLine = bufferedReader.readLine()) != null) {
+//                    System.out.println(inputLine);      // ** DEBUG **
+                    if (inputLine.length() > 1) {
+//                        Log.w(TAG, "'" + inputLine + "' " + inputLine.length());
+                        int x = inputLine.indexOf("team=");
+                        teamStuff = inputLine.substring(x+5, inputLine.indexOf("}"));
+                        x = inputLine.indexOf(", Stats2=");
+                        rankStuff = inputLine.substring(4, x);
+                        x = inputLine.indexOf("Stats=");
+                        int y = inputLine.indexOf("team=") -2;
+                        statStuff = inputLine.substring(x+6, y);
+                        x = inputLine.indexOf("Stats2=");
+                        y = inputLine.indexOf("Stats=") -2;
+                        stat2Stuff = inputLine.substring(x+7, y);
+                        HashMap<String, String> temp = new HashMap<String, String>();
+                        temp.put("team", teamStuff);
+                        temp.put("BA", rankStuff);
+                        temp.put("Stats", statStuff);
+                        temp.put("Stats2", stat2Stuff);
+                        draftList.add(temp);
+                        numTeams++;
+                    } else {
+                        Log.w(TAG, "'" + inputLine + "' " + inputLine.length());
+                    }
                 }
-            }
             Log.w(TAG, "### Teams ###  : " + draftList.size());
             txt_Teams = (TextView) findViewById(R.id.txt_Teams);
             txt_Teams.setText(String.valueOf(draftList.size()));
@@ -168,28 +173,47 @@ public class MainActivity extends AppCompatActivity {
 
 
     // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    public void buttonCapt_Click(View view) {
-        Log.i(TAG, ">>>>> buttonCapt_Click  " + teamSelected);
+    public void buttonUP_Click(View view) {
+        Log.d(TAG, ">>>>> buttonUP_Click  " + teamSelected);
         if (teamSelected >= 0) {
-            lstView_Teams.getChildAt(teamSelected).setBackgroundColor(Color.GREEN);
+            if (teamSelected == 0) {
+                final ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
+                tg.startTone(ToneGenerator.TONE_PROP_BEEP2);
+                Toast toast = Toast.makeText(getBaseContext(), "*** First Team cannot move Up! ***: ", Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+                toast.show();
+            } else {
+                Log.e(TAG, "Swapping  " + teamSelected + " and " + (teamSelected-1));
+                HashMap<String, String> top = draftList.get(teamSelected);
+                HashMap<String, String> bot = draftList.get(teamSelected-1);
+                draftList.set(teamSelected, bot);       // Swap the
+                draftList.set(teamSelected-1, top);     //   order of team
+                adaptTeams.notifyDataSetChanged();
+            }
         }
     }
 
     // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    public void buttonPicked_Click (View view){
-        Log.i(TAG, ">>>>> buttonPicked_Click  " + teamSelected);
+    public void buttonDOWN_Click (View view){
+        Log.d(TAG, ">>>>> buttonDOWN_Click  " + teamSelected);
         if (teamSelected >= 0) {
-            lstView_Teams.getChildAt(teamSelected).setBackgroundColor(Color.DKGRAY);
+            if (teamSelected == (numTeams -1)) {
+                final ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
+                tg.startTone(ToneGenerator.TONE_PROP_BEEP2);
+                Toast toast = Toast.makeText(getBaseContext(), "*** Last Team cannot move Down! ***: ", Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+                toast.show();
+            } else {
+                Log.e(TAG, "Swapping  " + teamSelected + " and " + (teamSelected+1));
+                HashMap<String, String> top = draftList.get(teamSelected);
+                HashMap<String, String> bot = draftList.get(teamSelected+1);
+                draftList.set(teamSelected, bot);       // Swap the
+                draftList.set(teamSelected+1, top);     //   order of team
+                adaptTeams.notifyDataSetChanged();
+            }
         }
     }
 
-    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    public void buttonCookie_Click (View view){
-        Log.i(TAG, ">>>>> buttonCookie_Click  " + teamSelected);
-        if (teamSelected >= 0) {
-            lstView_Teams.getChildAt(teamSelected).setBackgroundColor(Color.RED);
-        }
-    }
 
 
 //###################################################################

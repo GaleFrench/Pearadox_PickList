@@ -41,36 +41,24 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btn_Capt"
-            android:layout_width="70sp"
+            android:id="@+id/btn_UP"
+            android:layout_width="60sp"
             android:layout_height="30dp"
             android:background="@color/green"
-            android:onClick="buttonCapt_Click"
-            android:text="CAPTAIN"
+            android:onClick="buttonUP_Click"
+            android:text="▲ UP"
             android:textColor="@android:color/black"
             android:textSize="12sp"
             tools:enabled="false" />
 
         <Button
-            android:id="@+id/btn_Picked"
-            android:layout_width="70sp"
+            android:id="@+id/btn_DOWN"
+            android:layout_width="60sp"
             android:layout_height="30dp"
-            android:layout_marginStart="15dp"
+            android:layout_marginStart="10dp"
             android:background="@color/magenta"
-            android:onClick="buttonPicked_Click"
-            android:text="PICKED"
-            android:textColor="@android:color/black"
-            android:textSize="12sp"
-            tools:enabled="false" />
-
-        <Button
-            android:id="@+id/btn_Cookie"
-            android:layout_width="70sp"
-            android:layout_height="30dp"
-            android:layout_marginStart="15dp"
-            android:background="@color/red"
-            android:onClick="buttonCookie_Click"
-            android:text="COOKIE"
+            android:onClick="buttonDOWN_Click"
+            android:text="▼ DOWN"
             android:textColor="@android:color/black"
             android:textSize="12sp"
             tools:enabled="false" />
