@@ -2,6 +2,7 @@ package com.example.pearadox_picklist;
 
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.Environment;
@@ -21,21 +22,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
-    String TAG = "MainActivity";        // This CLASS name
+    private static String TAG = "MainActivity";        // This CLASS name
     public int teamSelected = -1;
+    public int listSize = 32;       // Minimum size of Pick List teams
     ImageView imageView_Pearadox;
     ListView lstView_Teams;
-    Button btn_UP, btn_DOWN;
+    Boolean save_list = false;
+    Button btn_UP, btn_DOWN, btn_save;
     Spinner spinner_Event;
     SimpleAdapter adaptTeams;
     ArrayAdapter<String> adapter_Event;
@@ -44,7 +50,9 @@ public class MainActivity extends AppCompatActivity {
     TextView TeamData, BA, Stats, Stats2;
     static final ArrayList<HashMap<String, String>> draftList = new ArrayList<HashMap<String, String>>();
     int numTeams = 0;
-    TextView txt_Teams;
+    TextView txt_Teams, txt_Selected;
+    String divider = new String(new char[30]).replace("\0", "▇");           // string of 'x' med blocks
+    String divStat2 = new String(new char[38]).replace("\0", "▇");          // string of 'x' med blocks
 
 
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -60,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
 
         txt_Teams = (TextView) findViewById(R.id.txt_Teams);
         txt_Teams.setText("");
+        txt_Selected = (TextView) findViewById(R.id.txt_Selected);
+        txt_Selected.setText("");
         Spinner spinner_Event = (Spinner) findViewById(R.id.spinner_Event);
         String[] events = getResources().getStringArray(R.array.event_array);
         adapter_Event = new ArrayAdapter<String>(this, R.layout.dev_list_layout, events);
@@ -68,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
         spinner_Event.setSelection(0, false);
         spinner_Event.setOnItemSelectedListener(new event_OnItemSelectedListener());
         lstView_Teams.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        btn_save=(Button) findViewById(R.id.btn_save);
+        btn_save.setEnabled(false);     // not until event selected
+        btn_save.setVisibility(View.INVISIBLE);
 
         // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         lstView_Teams.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -77,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
                 teamSelected = pos;
                 lstView_Teams.setSelector(android.R.color.holo_blue_light);
                 /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
+                txt_Selected.setText(String.valueOf(pos+1));
 //                Toast toast = Toast.makeText(getBaseContext(), "POS= " + teamSelected, Toast.LENGTH_LONG);
 //                toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
 //                toast.show();
@@ -97,8 +111,10 @@ public class MainActivity extends AppCompatActivity {
             FRC_ChampDiv = ev;
             Log.w(TAG, ">>>>> Event '" + ev + "'  \n ");
 //           draftList.clear();
+            save_list = false;
             loadFile();
-
+            btn_save.setVisibility(View.VISIBLE);
+            btn_save.setEnabled(true);     // now event selected
         }
         public void onNothingSelected(AdapterView<?> parent) {
             // Do nothing.
@@ -110,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
     /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
     /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
     private void loadFile() {
+        Log.w(TAG, "*** loadFile ***   Saved: " + save_list);
         adaptTeams = new SimpleAdapter(
                 this,
                 draftList,
@@ -120,10 +137,23 @@ public class MainActivity extends AppCompatActivity {
 
         draftList.clear();
         String file = "";
-
+        numTeams = 0;
         try {
-            file = FRC_ChampDiv + "_Pick-List" + ".txt";
+            file = FRC_ChampDiv + "_Save-List" + ".txt";
             File picks = new File(Environment.getExternalStorageDirectory() + "/download/FRC5414/" + file);
+            if(!picks.exists()) {
+                file = FRC_ChampDiv + "_Pick-List" + ".txt";
+                picks = new File(Environment.getExternalStorageDirectory() + "/download/FRC5414/" + file);
+                save_list = false;
+            } else {
+                final ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
+                tg.startTone(ToneGenerator.TONE_CDMA_ABBR_ALERT);
+                save_list = true;
+                Toast toast = Toast.makeText(getBaseContext(), " \n★★★   Using the SAVED Pick List   ★★★\n  ", Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+                toast.show();
+            }
+            Log.w(TAG, "@@@@@@  Saved: " + save_list);
             BufferedReader bufferedReader = null;
             bufferedReader = new BufferedReader(new FileReader(picks));
                 String inputLine;
@@ -149,11 +179,25 @@ public class MainActivity extends AppCompatActivity {
                         temp.put("Stats2", stat2Stuff);
                         draftList.add(temp);
                         numTeams++;
+                        if (numTeams == listSize)  {     // Add "break" entry if NOT Saved list
+                            Log.w(TAG, "At divide point " + save_list);
+                            if (!save_list) {
+                                Log.w(TAG, " Generating DIVIDER  -  #Teams:" + numTeams);
+                                HashMap<String, String> div = new HashMap<String, String>();
+                                div.put("team", divider);
+                                div.put("BA", " ⇧    Top " + listSize + " teams     ⬆");
+                                div.put("Stats", " ");
+                                div.put("Stats2", "  " + divStat2);
+                                draftList.add(div);
+                            } else {
+                                Log.w(TAG, " Already in the Saved List");
+                            }
+                        }
                     } else {
-                        Log.w(TAG, "'" + inputLine + "' " + inputLine.length());
+//                        Log.w(TAG, "'" + inputLine + "' " + inputLine.length());
                     }
                 }
-            Log.w(TAG, "### Teams ###  : " + draftList.size());
+            Log.w(TAG, "**** Teams **** : " + draftList.size());
             txt_Teams = (TextView) findViewById(R.id.txt_Teams);
             txt_Teams.setText(String.valueOf(draftList.size()));
             lstView_Teams.setAdapter(adaptTeams);
@@ -188,6 +232,11 @@ public class MainActivity extends AppCompatActivity {
                 HashMap<String, String> bot = draftList.get(teamSelected-1);
                 draftList.set(teamSelected, bot);       // Swap the
                 draftList.set(teamSelected-1, top);     //   order of teams
+                lstView_Teams.clearChoices();
+                adaptTeams.notifyDataSetInvalidated();
+                adaptTeams.notifyDataSetChanged();
+                lstView_Teams.setSelection(teamSelected-1);     // Highlight the team moved
+                lstView_Teams.performItemClick(lstView_Teams.findViewWithTag(lstView_Teams.getAdapter().getItem(teamSelected-1)), teamSelected-1, lstView_Teams.getAdapter().getItemId(teamSelected-1));
                 adaptTeams.notifyDataSetChanged();
             }
         }
@@ -209,8 +258,53 @@ public class MainActivity extends AppCompatActivity {
                 HashMap<String, String> bot = draftList.get(teamSelected+1);
                 draftList.set(teamSelected, bot);       // Swap the
                 draftList.set(teamSelected+1, top);     //   order of team
+                lstView_Teams.clearChoices();
+                adaptTeams.notifyDataSetInvalidated();
+                adaptTeams.notifyDataSetChanged();
+                lstView_Teams.setSelection(teamSelected+1);     // Highlight the team moved
+                lstView_Teams.performItemClick(lstView_Teams.findViewWithTag(lstView_Teams.getAdapter().getItem(teamSelected+1)), teamSelected+1, lstView_Teams.getAdapter().getItemId(teamSelected+1));
                 adaptTeams.notifyDataSetChanged();
             }
+        }
+    }
+    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    public void buttonSAVE_Click (View view) {
+        Log.d(TAG, ">>>>> buttonSAVE_Click  " + FRC_ChampDiv);
+
+        if (!FRC_ChampDiv.isEmpty()) {
+            HashMap<String, String> temp = new HashMap<String, String>();
+            try {
+                String destFile = FRC_ChampDiv + "_Save-List" + ".txt";
+                File prt = new File(Environment.getExternalStorageDirectory() + "/download/FRC5414/" + destFile);
+                BufferedWriter bW = new BufferedWriter(new OutputStreamWriter(
+                        new FileOutputStream(prt), "UTF-8"
+                ));
+
+                for (int i = 0; i < draftList.size(); i++) {    // load by sorted scores
+                    temp = draftList.get(i);
+                    bW.write(temp + "\n");
+
+                } //end FOR
+                //**********************************************
+                bW.write(" \n" + "\n");        // NL
+                bW.flush();
+                bW.close();
+                Toast toast = Toast.makeText(getBaseContext(), "***   Pick-List saved   ***: ", Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+                toast.show();
+
+            } catch (FileNotFoundException ex) {
+                System.out.println(ex.getMessage() + " not found in the specified directory.");
+                System.exit(0);
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        } else {
+            final ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
+            tg.startTone(ToneGenerator.TONE_PROP_BEEP2);
+            Toast toast = Toast.makeText(getBaseContext(), "★★★   Event MUST be selected first!   ★★★: ", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+            toast.show();
         }
     }
 

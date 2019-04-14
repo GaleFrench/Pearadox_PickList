@@ -64,22 +64,24 @@
             tools:enabled="false" />
 
         <TextView
-            android:id="@+id/txt_Teams"
+            android:id="@+id/txt_Selected"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="70dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="5dp"
+            android:background="@android:color/holo_blue_bright"
             android:text="00"
             android:textColor="@color/blue"
-            android:textSize="14sp" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/lbl_Event"
             android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:layout_marginStart="20dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="60dp"
             android:text="Event"
             android:textColor="@color/black"
-            android:textSize="14sp" />
+            android:textSize="12sp" />
 
         <Spinner
             android:id="@+id/spinner_Event"
@@ -87,6 +89,29 @@
             android:layout_height="35dp"
             android:layout_marginStart="10dp"
             android:prompt="@string/event_prompt" />
+
+        <TextView
+            android:id="@+id/txt_Teams"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="00"
+            android:textColor="@color/orange"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btn_save"
+            android:layout_width="60sp"
+            android:layout_height="30dp"
+            android:layout_gravity="right|end"
+            android:layout_marginStart="70dp"
+            android:layout_marginEnd="5dp"
+            android:background="@color/brightblue"
+            android:onClick="buttonSAVE_Click"
+            android:text="SAVE"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            tools:enabled="false" />
 
     </LinearLayout>
 
