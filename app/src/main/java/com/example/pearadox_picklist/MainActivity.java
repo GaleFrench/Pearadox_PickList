@@ -223,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
             if (teamSelected == 0) {
                 final ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
                 tg.startTone(ToneGenerator.TONE_PROP_BEEP2);
-                Toast toast = Toast.makeText(getBaseContext(), "*** First Team cannot move Up! ***: ", Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(getBaseContext(), "*** First Team cannot move Up! ***  ", Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
                 toast.show();
             } else {
@@ -249,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
             if (teamSelected == (numTeams -1)) {
                 final ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
                 tg.startTone(ToneGenerator.TONE_PROP_BEEP2);
-                Toast toast = Toast.makeText(getBaseContext(), "*** Last Team cannot move Down! ***: ", Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(getBaseContext(), "*** Last Team cannot move Down! ***  ", Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
                 toast.show();
             } else {
@@ -289,7 +289,7 @@ public class MainActivity extends AppCompatActivity {
                 bW.write(" \n" + "\n");        // NL
                 bW.flush();
                 bW.close();
-                Toast toast = Toast.makeText(getBaseContext(), "***   Pick-List saved   ***: ", Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(getBaseContext(), "***   Pick-List saved   ***  ", Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
                 toast.show();
 
@@ -302,7 +302,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             final ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
             tg.startTone(ToneGenerator.TONE_PROP_BEEP2);
-            Toast toast = Toast.makeText(getBaseContext(), "★★★   Event MUST be selected first!   ★★★: ", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(getBaseContext(), "★★★   Event MUST be selected first!   ★★★  ", Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
             toast.show();
         }
