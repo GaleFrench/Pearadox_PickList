@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.i(TAG, "******* Starting Pearadox-5414 Pick-List  *******");
+        Log.i(TAG, "\n \n******* Starting Pearadox-5414 Pick-List  *******");
         ImageView imageView_Pearadox = (ImageView) findViewById(R.id.imageView_Pearadox);
         lstView_Teams = (ListView) findViewById(R.id.lstView_Teams);
 //        FRC_ChampDiv = "TXCHA";   // DEBUG
@@ -131,8 +131,8 @@ public class MainActivity extends AppCompatActivity {
                 this,
                 draftList,
                 R.layout.draft_list_layout,
-                new String[]{"team", "BA", "Stats", "Stats2"},
-                new int[]{R.id.TeamData, R.id.BA, R.id.Stats, R.id.Stats2}
+                new String[]{"team", "BA", "Stats", "Stats2", "Stats3"},
+                new int[]{R.id.TeamData, R.id.BA, R.id.Stats, R.id.Stats2, R.id.Stats3}
         );
 
         draftList.clear();
@@ -157,26 +157,32 @@ public class MainActivity extends AppCompatActivity {
             BufferedReader bufferedReader = null;
             bufferedReader = new BufferedReader(new FileReader(picks));
                 String inputLine;
-                String teamStuff = ""; String rankStuff = ""; String statStuff = ""; String stat2Stuff = "";
+                String teamStuff = ""; String rankStuff = ""; String statStuff = ""; String stat2Stuff = ""; String stat3Stuff = "";
                 while ((inputLine = bufferedReader.readLine()) != null) {
 //                    System.out.println(inputLine);      // ** DEBUG **
                     if (inputLine.length() > 1) {
-//                        Log.w(TAG, "'" + inputLine + "' " + inputLine.length());
+                        Log.w(TAG, "'" + inputLine + "' " + inputLine.length());
                         int x = inputLine.indexOf("team=");
-                        teamStuff = inputLine.substring(x+5, inputLine.indexOf("}"));
-                        x = inputLine.indexOf(", Stats2=");
-                        rankStuff = inputLine.substring(4, x);
+                        int y = inputLine.indexOf("]");
+                        teamStuff = inputLine.substring(x+5, y+1);
+                        x = inputLine.indexOf("BA=");
+                        y = inputLine.indexOf(", Stats3=");
+                        rankStuff = inputLine.substring(x+3, y);
                         x = inputLine.indexOf("Stats=");
-                        int y = inputLine.indexOf("team=") -2;
+                        y = inputLine.indexOf("}");
                         statStuff = inputLine.substring(x+6, y);
                         x = inputLine.indexOf("Stats2=");
-                        y = inputLine.indexOf("Stats=") -2;
+                        y = inputLine.indexOf("team=") -2;
                         stat2Stuff = inputLine.substring(x+7, y);
+                        x = inputLine.indexOf("Stats3=");
+                        y = inputLine.indexOf("Stats2=")-2;
+                        stat3Stuff = inputLine.substring(x+7, y);
                         HashMap<String, String> temp = new HashMap<String, String>();
+                        temp.put("Stats3", stat3Stuff);
+                        temp.put("Stats2", stat2Stuff);
+                        temp.put("Stats", statStuff);
                         temp.put("team", teamStuff);
                         temp.put("BA", rankStuff);
-                        temp.put("Stats", statStuff);
-                        temp.put("Stats2", stat2Stuff);
                         draftList.add(temp);
                         numTeams++;
                         if (numTeams == listSize)  {     // Add "break" entry if NOT Saved list
@@ -187,7 +193,8 @@ public class MainActivity extends AppCompatActivity {
                                 div.put("team", divider);
                                 div.put("BA", " ⇧    Top " + listSize + " teams     ⬆");
                                 div.put("Stats", " ");
-                                div.put("Stats2", "  " + divStat2);
+                                div.put("Stats2", "  ");
+                                div.put("Stats3", "  " + divStat2);
                                 draftList.add(div);
                             } else {
                                 Log.w(TAG, " Already in the Saved List");
@@ -199,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             Log.w(TAG, "**** Teams **** : " + draftList.size());
             txt_Teams = (TextView) findViewById(R.id.txt_Teams);
-            txt_Teams.setText(String.valueOf(draftList.size()));
+            txt_Teams.setText(String.valueOf(draftList.size() + " teams"));
             lstView_Teams.setAdapter(adaptTeams);
             adaptTeams.notifyDataSetChanged();
 
