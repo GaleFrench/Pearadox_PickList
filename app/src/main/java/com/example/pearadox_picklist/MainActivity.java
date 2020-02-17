@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
             String ev = parent.getItemAtPosition(pos).toString();
             FRC_ChampDiv = ev;
             Log.w(TAG, ">>>>> Event '" + ev + "'  \n ");
-//           draftList.clear();
+           draftList.clear();
             save_list = false;
             loadFile();
             btn_save.setVisibility(View.VISIBLE);
@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
                 String teamStuff = ""; String rankStuff = ""; String statStuff = ""; String stat2Stuff = ""; String stat3Stuff = "";
                 while ((inputLine = bufferedReader.readLine()) != null) {
 //                    System.out.println(inputLine);      // ** DEBUG **
-                    if (inputLine.length() > 1) {
+                    if ( (inputLine.length() > 1) && (!inputLine.contains("▇")) ) {      // not empty & not the divider
                         Log.w(TAG, "'" + inputLine + "' " + inputLine.length());
                         int x = inputLine.indexOf("team=");
                         int y = inputLine.indexOf("]");
@@ -201,12 +201,14 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     } else {
-//                        Log.w(TAG, "'" + inputLine + "' " + inputLine.length());
+                        if ( inputLine.contains("▇") ) {      // _IS_ the divider
+                        Log.w(TAG, "\n  DIV'" + inputLine + "' " + inputLine.length());
+                        }
                     }
                 }
-            Log.w(TAG, "**** Teams **** : " + draftList.size());
+            Log.w(TAG, "**** Teams **** : " + (draftList.size()-0));
             txt_Teams = (TextView) findViewById(R.id.txt_Teams);
-            txt_Teams.setText(String.valueOf(draftList.size() + " teams"));
+            txt_Teams.setText(String.valueOf((draftList.size()-0) + " teams"));
             lstView_Teams.setAdapter(adaptTeams);
             adaptTeams.notifyDataSetChanged();
 
