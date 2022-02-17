@@ -37,7 +37,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
-    private static final int MY_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = ;
     private static String TAG = "MainActivity";        // This CLASS name
     public int teamSelected = -1;
     public int listSize = 32;       // Minimum size of Pick List teams
@@ -328,7 +327,6 @@ public class MainActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         Log.v(TAG, "onStart");
-        ActivityCompat.requestPermissions((MainActivity)mContext,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},MY_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE);
     }
 
     @Override
