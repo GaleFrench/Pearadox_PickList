@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
             String ev = parent.getItemAtPosition(pos).toString();
             FRC_ChampDiv = ev;
             Log.w(TAG, ">>>>> Event '" + ev + "'  \n ");
-           draftList.clear();
+            draftList.clear();
             save_list = false;
             loadFile();
             btn_save.setVisibility(View.VISIBLE);

@@ -8,10 +8,11 @@
     <string-array name="event_array">
         <item> </item>
         <item>TEST</item>
-        <item>TXPLA</item>
+        <item>TXCHA</item>
         <item>TXPAS</item>
-        <item>TXDRI</item>
-        <item>TXGRE</item>
+        <item>TXEV1</item>
+        <item>TXEV2</item>
+        <item>WORLD</item>
         <!--<item>FIRST Championship (Houston)</item>-->
     </string-array>
 
