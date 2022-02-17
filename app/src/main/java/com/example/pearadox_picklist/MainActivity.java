@@ -1,11 +1,13 @@
 package com.example.pearadox_picklist;
 
+import android.Manifest;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,6 +37,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
+    private static final int MY_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = ;
     private static String TAG = "MainActivity";        // This CLASS name
     public int teamSelected = -1;
     public int listSize = 32;       // Minimum size of Pick List teams
@@ -213,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
             adaptTeams.notifyDataSetChanged();
 
         } catch (FileNotFoundException ex) {
-            Toast toast = Toast.makeText(getBaseContext(), "*** File NOT found: " + file, Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(getBaseContext(), "*** File NOT found: " + file + " \n" + ex.getMessage(), Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
             toast.show();
             System.out.println(ex.getMessage() + " not found in the specified directory.");
@@ -221,7 +224,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-
     }
 
 
@@ -326,6 +328,7 @@ public class MainActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         Log.v(TAG, "onStart");
+        ActivityCompat.requestPermissions((MainActivity)mContext,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},MY_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE);
     }
 
     @Override
