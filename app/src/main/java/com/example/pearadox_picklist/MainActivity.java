@@ -39,7 +39,7 @@ import java.util.HashMap;
 public class MainActivity extends AppCompatActivity {
     private static String TAG = "MainActivity";        // This CLASS name
     public int teamSelected = -1;
-    public int listSize = 32;       // Minimum size of Pick List teams
+    public int listSize = 24;       // Minimum size of Pick List teams
     ImageView imageView_Pearadox;
     ListView lstView_Teams;
     Boolean save_list = false;
@@ -168,16 +168,16 @@ public class MainActivity extends AppCompatActivity {
                         int y = inputLine.indexOf("]");
                         teamStuff = inputLine.substring(x+5, y+1);
                         x = inputLine.indexOf("BA=");
-                        y = inputLine.indexOf(", Stats3=");
+                        y = inputLine.indexOf("}");
                         rankStuff = inputLine.substring(x+3, y);
                         x = inputLine.indexOf("Stats=");
-                        y = inputLine.indexOf("}");
+                        y = inputLine.indexOf("team=") -2;
                         statStuff = inputLine.substring(x+6, y);
                         x = inputLine.indexOf("Stats2=");
-                        y = inputLine.indexOf("team=") -2;
+                        y = inputLine.indexOf("Stats3=") -2;
                         stat2Stuff = inputLine.substring(x+7, y);
                         x = inputLine.indexOf("Stats3=");
-                        y = inputLine.indexOf("Stats2=")-2;
+                        y = inputLine.indexOf("Stats=")-2;
                         stat3Stuff = inputLine.substring(x+7, y);
                         HashMap<String, String> temp = new HashMap<String, String>();
                         temp.put("Stats3", stat3Stuff);
